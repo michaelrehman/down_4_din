@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class EntryAdapter extends ArrayAdapter {
 
-    ArrayList<Map<String, Object>> entries;
+    private ArrayList<Map<String, Object>> entries;
 
     public EntryAdapter(Context context, int textViewResourceId, ArrayList<Map<String, Object>> objects) {
         super(context, textViewResourceId, objects);

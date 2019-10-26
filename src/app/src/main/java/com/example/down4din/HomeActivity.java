@@ -25,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ListView list = findViewById(R.id.list);
+        final ListView list = findViewById(R.id.list);
         final ArrayList<Map<String, Object>> entriesList = new ArrayList<>();
 
         CollectionReference collection = FirebaseFirestore.getInstance()
@@ -38,11 +38,10 @@ public class HomeActivity extends AppCompatActivity {
                     for (int i = 0; i < allDocuments.size(); i++) {
                         entriesList.add(allDocuments.get(i).getData());
                     }
+                    EntryAdapter adapter = new EntryAdapter(getApplicationContext(), R.layout.list_item, entriesList);
+                    list.setAdapter(adapter);
                 }
             }
         });
-
-        EntryAdapter adapter = new EntryAdapter(this, R.layout.list_item, entriesList);
-        list.setAdapter(adapter);
     }
 }
