@@ -8,20 +8,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
-import android.view.View;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    GoogleMap map;
-
+    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
