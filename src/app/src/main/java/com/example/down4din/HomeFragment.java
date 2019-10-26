@@ -1,10 +1,15 @@
 package com.example.down4din;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,16 +24,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeFragment extends Fragment {
 
     FirebaseAuth mAuth;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        final ListView list = findViewById(R.id.list);
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(getContext(), LoginActivity.class));
+        }
+
+        final ListView list = v.findViewById(R.id.list);
         final ArrayList<Map<String, Object>> entriesList = new ArrayList<>();
 
         CollectionReference collection = FirebaseFirestore.getInstance()
@@ -41,19 +51,12 @@ public class HomeActivity extends AppCompatActivity {
                     for (int i = 0; i < allDocuments.size(); i++) {
                         entriesList.add(allDocuments.get(i).getData());
                     }
-                    EntryAdapter adapter = new EntryAdapter(getApplicationContext(), R.layout.list_item, entriesList);
+                    EntryAdapter adapter = new EntryAdapter(getContext(), R.layout.list_item, entriesList);
                     list.setAdapter(adapter);
                 }
             }
         });
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
+        return v;
     }
 }

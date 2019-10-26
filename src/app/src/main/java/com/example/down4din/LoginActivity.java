@@ -74,9 +74,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
                         } else {
-                            Log.w("ABC123", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(getApplicationContext(), "Account creation failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -92,7 +92,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Login failed.",
                                     Toast.LENGTH_SHORT).show();
