@@ -43,6 +43,7 @@ public class EntryAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 Intent i = new Intent(context, MapActivity.class);
                 i.putExtra("address", entry.get("address").toString());
+                i.putExtra("name", entry.get("name").toString());
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
             }
