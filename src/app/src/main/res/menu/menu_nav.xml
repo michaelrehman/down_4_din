@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_home"
-            android:icon="@drawable/house"
+            android:icon="@drawable/ic_house"
             android:title="@string/home" />
         <item android:id="@+id/nav_profile"
-            android:icon="@drawable/person"
+            android:icon="@drawable/ic_person"
             android:title="@string/profile" />
-        <item android:id="@+id/status"
-            android:icon="@drawable/status"
-            android:title="@string/setstatus" />
-        <item android:id="@+id/message"
-            android:icon="@drawable/message"
+        <item android:id="@+id/nav_messages"
+            android:icon="@drawable/ic_message"
             android:title="@string/messages" />
-    </group>
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/settings"
-            android:icon="@drawable/settings"
+        <item android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
-        <item android:id="@+id/signout"
-            android:title="@string/signout" />
     </group>
+    <item android:title="Actions">
+        <menu>
+            <item android:id="@+id/status"
+                android:icon="@drawable/ic_status"
+                android:title="@string/setstatus" />
+            <item android:id="@+id/signout"
+                android:icon="@drawable/ic_exit"
+                android:title="@string/signout" />
+        </menu>
+    </item>
 </menu>

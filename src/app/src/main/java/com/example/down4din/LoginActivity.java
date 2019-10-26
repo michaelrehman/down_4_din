@@ -36,23 +36,23 @@ public class LoginActivity extends AppCompatActivity {
         createAccountButtons = findViewById(R.id.createAccount);
         mAuth = FirebaseAuth.getInstance();
 
-        passwordInput.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getX() >= (passwordInput.getWidth() - passwordInput
-                            .getCompoundDrawables()[2].getBounds().width())) {
-                        if (passwordInput.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
-                            passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                        } else {
-                            passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+//        passwordInput.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_UP) {
+//                    if(event.getX() >= (passwordInput.getWidth() - passwordInput
+//                            .getCompoundDrawables()[2].getBounds().width())) {
+//                        if (passwordInput.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+//                            passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                        } else {
+//                            passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        }
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
     }
 
     public void switchButtons(View v) {

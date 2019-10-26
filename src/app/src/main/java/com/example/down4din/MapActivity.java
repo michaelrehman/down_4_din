@@ -1,7 +1,6 @@
 package com.example.down4din;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -33,30 +32,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
+        try {
+            mapFragment.getMapAsync(this);
+        } catch(NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
         bundle = getIntent().getExtras();
-        address = bundle.getString("address");
-        name = bundle.getString("name");
+        try {
+            address = bundle.getString("address");
+            name = bundle.getString("name");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
-
-
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
 
     public LatLng getLocFromAdd(Context context, String add){
         Geocoder gc = new Geocoder(context);
@@ -65,11 +69,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         try {
             // May throw an IOException
             address = gc.getFromLocationName(add, 5);
-            if (address == null) {
-                return null;
-            }
-
-            if (address.size() == 0) {
+            if (address == null || address.size() == 0) {
                 return null;
             }
 
@@ -78,34 +78,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             location.getLongitude();
 
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
         } catch (IOException ex) {
-
             ex.printStackTrace();
             Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
-
         return latLng;
-
     }
-
-
-
-
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
         LatLng temp = getLocFromAdd(this, address);
-
         LatLng location = new LatLng(temp.latitude, temp.longitude);
         map.addMarker(new MarkerOptions().position(location).title(address));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
-
-//        LatLng boltonHall = new LatLng(33.9510 ,  83.3775);
-//        map.addMarker(new MarkerOptions().position(boltonHall).title("Bolton Dining Hall"));
-//        map.moveCamera(CameraUpdateFactory.newLatLng(boltonHall));
     }
 }

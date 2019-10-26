@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class EntryAdapter extends ArrayAdapter {
     private ArrayList<Map<String, Object>> entries;
     private Context context;
 
-    public EntryAdapter(Context context, int textViewResourceId, ArrayList<Map<String, Object>> objects) {
+    EntryAdapter(Context context, int textViewResourceId, ArrayList<Map<String, Object>> objects) {
         super(context, textViewResourceId, objects);
         this.context = context;
         entries = objects;
@@ -50,7 +51,12 @@ public class EntryAdapter extends ArrayAdapter {
         });
 
         main.setText(String.format("%s is %s", entry.get("name"), entry.get("doing")));
-        address.setText(entry.get("address").toString());
+        try {
+            address.setText(entry.get("address").toString());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
         return v;
     }
 }
