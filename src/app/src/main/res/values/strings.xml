@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Down4Din</string>
+    <!-- LOG IN SCREEN -->
     <string name="login">LOG IN</string>
     <string name="signup">SIGN UP</string>
     <string name="goback">GO BACK</string>
     <string name="create">CREATE</string>
-    <string name="title_activity_map">MapActivity</string>
-    <string name="title_activity_chat">ChatActivity</string>
+    <!-- NAVIGATION DRAWER -->
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="setstatus">Set Status</string>
+    <string name="messages">Messages</string>
+    <string name="settings">Settings</string>
+    <string name="signout">Sign Out</string>
 </resources>
