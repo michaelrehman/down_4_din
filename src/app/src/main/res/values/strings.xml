@@ -4,4 +4,6 @@
     <string name="signup">SIGN UP</string>
     <string name="goback">GO BACK</string>
     <string name="create">CREATE</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>
