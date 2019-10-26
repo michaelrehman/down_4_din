@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "249442216845",
+    "firebase_url": "https://down4din.firebaseio.com",
+    "project_id": "down4din",
+    "storage_bucket": "down4din.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249442216845:android:d6b367dbc774dadfeaebc4",
+        "android_client_info": {
+          "package_name": "com.example.down4din"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249442216845-21ekqo39104octel0ppllv3fm8pv26nk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ3KDCMzyrevmQUiy-7OquHGEeBnlKxiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249442216845-21ekqo39104octel0ppllv3fm8pv26nk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
