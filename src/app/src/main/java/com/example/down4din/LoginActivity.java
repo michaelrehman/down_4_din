@@ -5,9 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -17,7 +14,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,43 +62,55 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void createAccount(View v) {
-        String emailValue = emailInput.getText().toString();
-        Log.i("VALUE", emailValue);
-        String passwordValue = passwordInput.getText().toString();
-        mAuth.createUserWithEmailAndPassword(emailValue, passwordValue)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Account creation failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        final String emailValue = emailInput.getText().toString().trim();
+        final String passwordValue = passwordInput.getText().toString().trim();
+        if (validateInputs(emailValue, passwordValue)) {
+            if (passwordValue.length() >= 6) {
+                mAuth.createUserWithEmailAndPassword(emailValue.trim(), passwordValue.trim())
+                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Account creation failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            } else {
+                Toast.makeText(this, "Password must be 6 or more characters",
+                        Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void verifyUser(View v) {
-        String emailValue = emailInput.getText().toString();
-        String passwordValue = passwordInput.getText().toString();
-        mAuth.signInWithEmailAndPassword(emailValue, passwordValue)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Login failed.",
-                                    Toast.LENGTH_SHORT).show();
+        String emailValue = emailInput.getText().toString().trim();
+        String passwordValue = passwordInput.getText().toString().trim();
+        if (validateInputs(emailValue, passwordValue)) {
+            mAuth.signInWithEmailAndPassword(emailValue, passwordValue)
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Login failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } else {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void validateInputs() {
-        // TODO: form validation
+    private boolean validateInputs(String email, String password) {
+        return !(email.equals("") || password.equals(""));
     }
 }

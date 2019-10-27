@@ -1,21 +1,25 @@
 <resources>
     <string name="app_name">Down4</string>
     <string name="db_collection">test_users</string>
+    <string name="submit">SUBMIT</string>
     <!-- LOG IN SCREEN -->
     <string name="login">LOG IN</string>
-    <string name="signup">SIGN UP</string>
-    <string name="goback">GO BACK</string>
+    <string name="signUp">SIGN UP</string>
+    <string name="goBack">GO BACK</string>
     <string name="create">CREATE</string>
     <!-- NAVIGATION DRAWER -->
     <string name="home">Home</string>
     <string name="profile">Profile</string>
-    <string name="setstatus">Set Status</string>
+    <string name="setStatus">Set Status</string>
+    <string name="clearStatus">Clear Status</string>
     <string name="messages">Messages</string>
     <string name="settings">Settings</string>
-    <string name="signout">Sign Out</string>
+    <string name="signOut">Sign Out</string>
     <string name="openNav">Open Navigation</string>
     <string name="closeNav">Close Navigation</string>
     <!-- STATUS DIALOG -->
     <string name="tellYourFriends">Tell your friends what you\'re doing</string>
     <string name="updateAddress">Click me to choose a location</string>
+    <!-- PROFILE FRAGMENT -->
+    <string name="yourName">Your Name</string>
 </resources>

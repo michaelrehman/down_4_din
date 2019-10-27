@@ -20,10 +20,13 @@
         <menu>
             <item android:id="@+id/status"
                 android:icon="@drawable/ic_status"
-                android:title="@string/setstatus" />
+                android:title="@string/setStatus" />
+            <item android:id="@+id/clear"
+                android:icon="@drawable/ic_clear"
+                android:title="@string/clearStatus" />
             <item android:id="@+id/signout"
                 android:icon="@drawable/ic_exit"
-                android:title="@string/signout" />
+                android:title="@string/signOut" />
         </menu>
     </item>
 </menu>

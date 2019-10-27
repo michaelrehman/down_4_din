@@ -46,13 +46,13 @@ public class StatusDialog extends AppCompatDialogFragment {
                     .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String doing = doingInput.getText().toString();
-                            String address = addressInput.getText().toString();
-                            if (doing.length() == 0 || address.length() == 0) {
+                            String doing = doingInput.getText().toString().trim();
+                            String address = addressInput.getText().toString().trim();
+                            if (doing.equals("") || address.equals("")) {
                                 Toast.makeText(getContext(), "Please fill in all fields",
                                         Toast.LENGTH_LONG).show();
                             } else {
-                                listener.updateValue(doing, address);
+                                listener.updateEntry(doing, address);
                             }
                         }
                     });
@@ -64,7 +64,7 @@ public class StatusDialog extends AppCompatDialogFragment {
     }
 
     public interface StatusDialogListener {
-        void updateValue(String doing, String address);
+        void updateEntry(String doing, String address);
     }
 
     @Override

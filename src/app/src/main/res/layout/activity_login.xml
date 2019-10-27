@@ -80,7 +80,7 @@
             android:layout_weight="1"
             android:background="@drawable/cta_secondary"
             android:onClick="switchButtons"
-            android:text="@string/signup"
+            android:text="@string/signUp"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -122,7 +122,7 @@
             android:layout_weight="1"
             android:background="@drawable/cta_tertiary"
             android:onClick="switchButtons"
-            android:text="@string/goback"
+            android:text="@string/goBack"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 

@@ -3,6 +3,8 @@ package com.example.down4din;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,20 +29,27 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         StatusDialog.StatusDialogListener {
 
+    private FirebaseFirestore db;
+    private FirebaseUser user;
     private DrawerLayout drawerLayout;
+    private NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorSecondary));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorSecondary, null));
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawerLayout);
-        NavigationView navView = findViewById(R.id.navView);
+        navView = findViewById(R.id.navView);
         navView.setNavigationItemSelectedListener(this);
+        updateNavHeader();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.openNav, R.string.closeNav
@@ -58,23 +68,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                        new HomeFragment()).commit();
+                openFrag(new HomeFragment());
                 break;
             case R.id.nav_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                        new ProfileFragment()).commit();
+                openFrag(new ProfileFragment());
                 break;
             case R.id.nav_messages:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                        new MessagesFragment()).commit();
+                openFrag(new MessagesFragment());
                 break;
             case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                        new SettingsFragment()).commit();
+                openFrag(new SettingsFragment());
                 break;
             case R.id.status:
                 openStatusWindow();
+                break;
+            case R.id.clear:
+                deleteEntry();
                 break;
             case R.id.signout:
                 FirebaseAuth.getInstance().signOut();
@@ -84,6 +93,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openFrag(Fragment frag) {
+        getSupportFragmentManager().beginTransaction().replace(
+                R.id.fragmentContainer,
+                frag
+        ).commit();
+    }
+
+    public void updateNavHeader() {
+        View header = navView.getHeaderView(0);
+        ((TextView) header.findViewById(R.id.email)).setText(user.getEmail());
+        String name = user.getDisplayName();
+        if (!(name == null || name.equals(""))) {
+            ((TextView) header.findViewById(R.id.name)).setText(user.getDisplayName());
+        }
     }
 
     @Override
@@ -101,12 +126,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void updateValue(String doing, String address) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public void updateEntry(String doing, String address) {
+        if (user.getDisplayName() == null || user.getDisplayName().trim().equals("")) {
+            Toast.makeText(this, "You have not set your display name",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Map<String, String> entry = new HashMap<>();
-        entry.put("name", "fakeName");
+        entry.put("name", user.getDisplayName());
         entry.put("doing", doing);
         entry.put("address", address);
 
@@ -124,6 +152,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(), "We were unable to update your status",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void deleteEntry() {
+        db.collection(getResources().getString(R.string.db_collection))
+                .document(user.getUid())
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(getApplicationContext(), "Status cleared",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "We were unable to clear your status",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
