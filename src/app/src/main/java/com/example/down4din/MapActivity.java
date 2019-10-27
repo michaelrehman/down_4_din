@@ -1,35 +1,28 @@
 package com.example.down4din;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -40,65 +33,64 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Context context;
     private SearchView searchView;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         this.context = this;
 
-
         searchView = findViewById(R.id.sv_location);
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-
+            public boolean onQueryTextSubmit(final String query) {
+                map.clear();
                 String location = searchView.getQuery().toString();
                 List<Address> addressList = null;
-                if(location != null || !location.equals("")){
-                    Geocoder geocoder = new Geocoder(MapActivity.this);
-                    try{
-                        addressList = geocoder.getFromLocationName(location, 1);
+                if(location != null && !location.equals("")){
+                    final Geocoder geocoder = new Geocoder(MapActivity.this);
+                    try {
+                        addressList = geocoder.getFromLocationName(location, 5);
                     } catch (IOException e) {
-
+                        e.printStackTrace();
                     }
 
-                    Address address = addressList.get(0);
-                    LatLng latLong = new LatLng(address.getLatitude(), address.getLongitude());
+                    int i = 0;
+                    while (addressList != null && i < addressList.size() && addressList.get(i) != null) {
+                        Address address = addressList.get(i);
+                        String title = getStreetAddress(address);
 
+                        LatLng latLong = new LatLng(address.getLatitude(), address.getLongitude());
+                        map.addMarker(new MarkerOptions().position(latLong).title(title)).showInfoWindow();
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 10));
+                        i++;
+                    }
 
+                    map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            String placeCoords = marker.getPosition().toString();
+                            Intent intent = new Intent();
 
-                    map.addMarker(new MarkerOptions().position(latLong).title(query));
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 10));
+                            intent.putExtra("address", marker.getTitle());
+                            intent.putExtra("addressLat",
+                                    placeCoords.substring(placeCoords.indexOf("(") + 1, placeCoords.indexOf(",")));
+                            intent.putExtra("addressLong",
+                                    placeCoords.substring(placeCoords.indexOf(",") + 1, placeCoords.indexOf(")")));
 
-                    Bundle toStausDialog = new Bundle();
-                    StatusDialog sd = new StatusDialog();
-                    String placeCoords = latLong.toString();
-                    toStausDialog.putString("place", query);
-                    toStausDialog.putString("placeLat", placeCoords.substring(placeCoords.indexOf("(") + 1, placeCoords.indexOf(",")));
-                    toStausDialog.putString("placeLong", placeCoords.substring(placeCoords.indexOf(",") + 1, placeCoords.indexOf(")")));
-                    sd.setArguments(toStausDialog);
-
-
-                    finish();
-
-
+                            setResult(RESULT_OK, intent);
+                            finish();
+                            return true;
+                        }
+                    });
                 }
-
                 return false;
             }
-
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
+            public boolean onQueryTextChange(String newText) { return false; }
         });
 
         try {
@@ -125,13 +117,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-
-
     }
 
     @Override
     public boolean onSupportNavigateUp() {
+        setResult(RESULT_CANCELED);
         finish();
         return super.onSupportNavigateUp();
     }
@@ -159,17 +149,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return latLng;
     }
 
+    private String getStreetAddress(Address add) {
+        String addressAsString = add.toString();
+        int firstDQ = addressAsString.indexOf("\"");
+        int secondDQ = addressAsString.indexOf("\"", firstDQ + 1);
+        return addressAsString.substring(firstDQ + 1, secondDQ);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
-
         if(getIntent().hasExtra("address")) {
             LatLng location = getLocFromAdd(this, address);
-            map.addMarker(new MarkerOptions().position(location).title(String.format("%s is here", name)));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
+            String title = "";
+            try {
+                title = getStreetAddress(new Geocoder(this).
+                        getFromLocation(location.latitude, location.longitude, 1).get(0));
+            } catch (IOException e) { e.printStackTrace(); }
 
+            map.addMarker(new MarkerOptions().position(location).title(title)).showInfoWindow();
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
+            searchView.setVisibility(View.GONE);
         }
     }
-
 }

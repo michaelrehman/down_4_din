@@ -25,14 +25,12 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
-    FirebaseAuth mAuth;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(getContext(), LoginActivity.class));
         }
@@ -48,6 +46,7 @@ public class HomeFragment extends Fragment {
                 if (task.isSuccessful()) {
                     List<DocumentSnapshot> allDocuments = task.getResult().getDocuments();
                     for (int i = 0; i < allDocuments.size(); i++) {
+                        // TODO: don't add the current user's entry
                         entriesList.add(allDocuments.get(i).getData());
                     }
                     EntryAdapter adapter = new EntryAdapter(getContext(), R.layout.list_item, entriesList);

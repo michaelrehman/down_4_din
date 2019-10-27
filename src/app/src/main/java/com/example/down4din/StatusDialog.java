@@ -18,18 +18,14 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class StatusDialog extends AppCompatDialogFragment {
 
+    static final int ADDRESS_REQUEST = 0;
+
     private EditText doingInput, addressInput;
     private StatusDialogListener listener;
-    public String address;
-
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-
-
-
         Activity activity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         try {
@@ -41,7 +37,7 @@ public class StatusDialog extends AppCompatDialogFragment {
             addressInput.setFocusable(false);
             addressInput.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) { address = openAddressPicker();}
+                public void onClick(View v) { openAddressPicker();}
             });
 
             builder.setView(view)
@@ -54,7 +50,7 @@ public class StatusDialog extends AppCompatDialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String doing = doingInput.getText().toString().trim();
-                            address = addressInput.getText().toString().trim();
+                            String address = addressInput.getText().toString().trim();
                             if (doing.equals("") || address.equals("")) {
                                 Toast.makeText(getContext(), "Please fill in all fields",
                                         Toast.LENGTH_LONG).show();
@@ -85,13 +81,20 @@ public class StatusDialog extends AppCompatDialogFragment {
         }
     }
 
-    // TODO: create address picker
-    private String openAddressPicker() {
-        Intent i = new Intent(getContext(), MapActivity.class);
-        getContext().startActivity(i);
+    private void openAddressPicker() {
+        Intent i = new Intent(getActivity(), MapActivity.class);
+        startActivityForResult(i, ADDRESS_REQUEST);
+    }
 
-        if(getArguments() != null)
-            return getArguments().getString("place");
-        return null;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == ADDRESS_REQUEST && resultCode == getActivity().RESULT_OK) {
+            try {
+                addressInput.setText(data.getStringExtra("address"));
+            } catch (NullPointerException e) {
+                Toast.makeText(getContext(), "We were unable to get that location",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
