@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Down4Din</string>
+    <string name="app_name">Down4</string>
     <!-- LOG IN SCREEN -->
     <string name="login">LOG IN</string>
     <string name="signup">SIGN UP</string>
