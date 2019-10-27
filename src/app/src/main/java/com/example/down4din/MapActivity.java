@@ -90,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map = googleMap;
         LatLng temp = getLocFromAdd(this, address);
         LatLng location = new LatLng(temp.latitude, temp.longitude);
-        map.addMarker(new MarkerOptions().position(location).title(address));
+        map.addMarker(new MarkerOptions().position(location).title(String.format("%s is here", name)));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
     }
 }
