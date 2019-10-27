@@ -1,8 +1,13 @@
 package com.example.down4din;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,13 +15,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -25,6 +33,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String name;
     private Bundle bundle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +41,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+
+
+
+
         try {
             mapFragment.getMapAsync(this);
         } catch(NullPointerException e) {
@@ -54,6 +68,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
+
+
     }
 
     @Override
@@ -88,9 +105,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        LatLng temp = getLocFromAdd(this, address);
-        LatLng location = new LatLng(temp.latitude, temp.longitude);
+
+
+
+        LatLng location = getLocFromAdd(this, address);
         map.addMarker(new MarkerOptions().position(location).title(String.format("%s is here", name)));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
     }
+
 }
