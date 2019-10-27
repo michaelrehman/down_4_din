@@ -39,28 +39,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorSecondary, null));
-        setSupportActionBar(toolbar);
+        if (user == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        } else {
+            db = FirebaseFirestore.getInstance();
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        navView = findViewById(R.id.navView);
-        navView.setNavigationItemSelectedListener(this);
-        updateNavHeader();
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorSecondary, null));
+            setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.openNav, R.string.closeNav
-        );
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+            drawerLayout = findViewById(R.id.drawerLayout);
+            navView = findViewById(R.id.navView);
+            navView.setNavigationItemSelectedListener(this);
+            updateNavHeader();
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                    new HomeFragment()).commit();
-            navView.setCheckedItem(R.id.nav_home);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawerLayout, toolbar, R.string.openNav, R.string.closeNav
+            );
+            drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
+                        new HomeFragment()).commit();
+                navView.setCheckedItem(R.id.nav_home);
+            }
         }
     }
 
