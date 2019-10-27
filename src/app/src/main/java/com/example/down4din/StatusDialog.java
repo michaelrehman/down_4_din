@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,16 @@ public class StatusDialog extends AppCompatDialogFragment {
 
     private EditText doingInput, addressInput;
     private StatusDialogListener listener;
+    public String address;
+
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
+
+
+
         Activity activity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         try {
@@ -31,10 +38,10 @@ public class StatusDialog extends AppCompatDialogFragment {
 
             doingInput = view.findViewById(R.id.doingInput);
             addressInput = view.findViewById(R.id.addressInput);
-//            addressInput.setFocusable(false);
+            addressInput.setFocusable(false);
             addressInput.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) { openAddressPicker(); }
+                public void onClick(View v) { address = openAddressPicker();}
             });
 
             builder.setView(view)
@@ -47,7 +54,7 @@ public class StatusDialog extends AppCompatDialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String doing = doingInput.getText().toString().trim();
-                            String address = addressInput.getText().toString().trim();
+                            address = addressInput.getText().toString().trim();
                             if (doing.equals("") || address.equals("")) {
                                 Toast.makeText(getContext(), "Please fill in all fields",
                                         Toast.LENGTH_LONG).show();
@@ -79,7 +86,12 @@ public class StatusDialog extends AppCompatDialogFragment {
     }
 
     // TODO: create address picker
-    private void openAddressPicker() {
+    private String openAddressPicker() {
+        Intent i = new Intent(getContext(), MapActivity.class);
+        getContext().startActivity(i);
 
+        if(getArguments() != null)
+            return getArguments().getString("place");
+        return null;
     }
 }

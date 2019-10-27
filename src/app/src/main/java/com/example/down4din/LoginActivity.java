@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -97,7 +98,8 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+								startActivity(new Intent(getApplicationContext(), MainActivity.class));
+								playSound();
                                 finish();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Login failed.",
@@ -112,5 +114,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validateInputs(String email, String password) {
         return !(email.equals("") || password.equals(""));
+    }
+
+    private void playSound() {
+        MediaPlayer mediaPlayer= MediaPlayer.create(LoginActivity.this,R.raw.noisething);
+        mediaPlayer.start();
     }
 }
