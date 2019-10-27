@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
         final ArrayList<Map<String, Object>> entriesList = new ArrayList<>();
 
         CollectionReference collection = FirebaseFirestore.getInstance()
-                .collection("test_users");
+                .collection(getResources().getString(R.string.db_collection));
         collection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
