@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Down4</string>
-    <string name="db_collection">test_users</string>
+    <string name="db_collection">user_entries</string>
     <string name="submit">SUBMIT</string>
     <!-- LOG IN SCREEN -->
     <string name="login">LOG IN</string>
