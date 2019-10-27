@@ -4,6 +4,6 @@
     <color name="colorSecondary">#EBEBEB</color>
     <color name="colorAccent">#AA56D5</color>
     <color name="colorAccent2">#481620</color>
-    <!-- TODO: create button states -->
+    <color name="gray">#AEAEAE</color>
     <!-- TODO: create box shadow for entries -->
 </resources>
