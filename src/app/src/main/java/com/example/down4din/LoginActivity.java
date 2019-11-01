@@ -3,9 +3,13 @@ package com.example.down4din;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,8 +24,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput;
     private LinearLayout returningUserButtons, createAccountButtons;
+    private boolean isPassVisible;
+
     private FirebaseAuth mAuth;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +39,35 @@ public class LoginActivity extends AppCompatActivity {
         returningUserButtons = findViewById(R.id.returningUser);
         createAccountButtons = findViewById(R.id.createAccount);
         mAuth = FirebaseAuth.getInstance();
+
+        isPassVisible = false;
+        //Allows the user to see their password
+        //by clcicking the eye icon in the password field
+        passwordInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (passwordInput.getRight() -passwordInput.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        if(isPassVisible) {
+                            passwordInput.setInputType(InputType.TYPE_CLASS_TEXT |
+                                    InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                            isPassVisible = false;
+                        }
+                        else {
+                            passwordInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                            isPassVisible = true;
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
 //        passwordInput.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
